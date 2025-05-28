@@ -413,7 +413,7 @@ double calculate_psnr(const uint8_t* original, const uint8_t* compressed, int wi
     
     if(mse == 0) return -1; 
     
-    // вычисляем PSNR по формуле 20 * log10(MAX) - 10 * log10(MSE)
+    // вычисляем psnr по формуле
     double max_value = 255.0;
     return 20 * log10(max_value) - 10 * log10(mse);
 }
@@ -476,8 +476,8 @@ double calculate_ssim(const uint8_t* original, const uint8_t* compressed, int wi
 int main() {
     // сжатие svd
     printf("\nPerforming SVD compression...\n");
-    svd_compress(INPUT_FILE, "svd_high.bin", "svd_high.bmp", 100); // 100 компонент
-    svd_compress(INPUT_FILE, "svd_low.bin", "svd_low.bmp", 50);    // 50 компонент
+    svd_compress(INPUT_FILE, "svd_high.bin", "svd_high.bmp", 100); // 100
+    svd_compress(INPUT_FILE, "svd_low.bin", "svd_low.bmp", 50);    // 50
     
     // сжатие jpeg
     printf("\nPerforming JPEG compression...\n");
@@ -487,17 +487,17 @@ int main() {
     // метрики качества
     printf("\nCalculating quality metrics...\n");
     printf("\nSVD compression metrics:\n");
-    calculate_metrics(INPUT_FILE, "svd_high.bmp"); // метрики для SVD высокого качества
-    calculate_metrics(INPUT_FILE, "svd_low.bmp");  // метрики для SVD низкого качества
+    calculate_metrics(INPUT_FILE, "svd_high.bmp"); // метрики SVD высокого качества
+    calculate_metrics(INPUT_FILE, "svd_low.bmp");  // метрики SVD низкого качества
     
     printf("\nJPEG compression metrics:\n");
-    calculate_metrics(INPUT_FILE, "jpg_high.bmp"); // метрики для JPEG высокого качества
-    calculate_metrics(INPUT_FILE, "jpg_low.bmp");  // метрики для JPEG низкого качества
+    calculate_metrics(INPUT_FILE, "jpg_high.bmp"); // метрики JPEG высокого качества
+    calculate_metrics(INPUT_FILE, "jpg_low.bmp");  // метрики JPEG низкого качества
     
     return 0;
 }
 
-void jpeg_compress(const char* input_file, const char* jpeg_file, const char* output_file, double quality) { // сжатие изображения методом JPEG
+void jpeg_compress(const char* input_file, const char* jpeg_file, const char* output_file, double quality) { // сжатие изображения JPEG
     // открываем входной файл
     FILE* file = fopen(input_file, "rb");
     if (!file) {
@@ -697,11 +697,11 @@ void jpeg_compress(const char* input_file, const char* jpeg_file, const char* ou
         return;
     }
     
-    // заполняем заголовки BMP
+
     BITMAPFILEHEADER out_file_header = {0};
     BITMAPINFOHEADER out_info_header = {0};
     
-    out_file_header.bfType = 0x4D42; // сигнатура BMP ("BM")
+    out_file_header.bfType = 0x4D42;
     out_file_header.bfSize = sizeof(BITMAPFILEHEADER) + sizeof(BITMAPINFOHEADER) + (width * 3 + padding) * height;
     out_file_header.bfOffBits = sizeof(BITMAPFILEHEADER) + sizeof(BITMAPINFOHEADER);
     
@@ -792,23 +792,23 @@ void svd_compress(const char* input_file, const char* svd_file, const char* outp
 
     // читаем данные изображения
     fseek(file, file_header.bfOffBits, SEEK_SET);
-    for (int y = height - 1; y >= 0; y--) { // читаем строки снизу вверх (формат BMP)
+    for (int y = height - 1; y >= 0; y--) {
         for (int x = 0; x < width; x++) {
             int idx = (y * width + x) * 3;
-            fread(&img_data[idx + 2], 1, 1, file); // B
-            fread(&img_data[idx + 1], 1, 1, file); // G
-            fread(&img_data[idx], 1, 1, file);     // R
+            fread(&img_data[idx + 2], 1, 1, file);
+            fread(&img_data[idx + 1], 1, 1, file);
+            fread(&img_data[idx], 1, 1, file);
         }
         fseek(file, padding, SEEK_CUR); // пропускаем padding
     }
     fclose(file);
 
-    // выделяем память для матриц каналов
+
     float *A_R = (float*)malloc(m * n * sizeof(float));
     float *A_G = (float*)malloc(m * n * sizeof(float));
     float *A_B = (float*)malloc(m * n * sizeof(float));
     
-    // нормализуем входные данные в диапазон [0,1]
+    // нормализуем входные данные в диапазон 0-1
     for (int i = 0; i < m; i++) {
         for (int j = 0; j < n; j++) {
             int idx = i * n + j;
@@ -876,7 +876,7 @@ void svd_compress(const char* input_file, const char* svd_file, const char* outp
         }
     }
     
-    // преобразуем обратно в диапазон [0,255]
+    // преобразуем обратно в диапазон 0-255
     unsigned char *out_img = (unsigned char*)malloc(m * n * 3 * sizeof(unsigned char));
     for (int i = 0; i < m * n; i++) {
         int r = (int)roundf(A_R_approx[i] * 255.0f);
@@ -897,11 +897,11 @@ void svd_compress(const char* input_file, const char* svd_file, const char* outp
         return;
     }
     
-    // заполняем заголовки BMP
+
     BITMAPFILEHEADER out_file_header = {0};
     BITMAPINFOHEADER out_info_header = {0};
     
-    out_file_header.bfType = 0x4D42; // сигнатура BMP ("BM")
+    out_file_header.bfType = 0x4D42; // сигнатура BMP
     out_file_header.bfSize = sizeof(BITMAPFILEHEADER) + sizeof(BITMAPINFOHEADER) + (width * 3 + padding) * height;
     out_file_header.bfOffBits = sizeof(BITMAPFILEHEADER) + sizeof(BITMAPINFOHEADER);
     
@@ -912,10 +912,10 @@ void svd_compress(const char* input_file, const char* svd_file, const char* outp
     out_info_header.biBitCount = 24;
     out_info_header.biCompression = 0;
     out_info_header.biSizeImage = (width * 3 + padding) * height;
-    out_info_header.biXPelsPerMeter = 2835; // 72 DPI
-    out_info_header.biYPelsPerMeter = 2835; // 72 DPI
+    out_info_header.biXPelsPerMeter = 2835;
+    out_info_header.biYPelsPerMeter = 2835;
     
-    // записываем заголовки
+
     fwrite(&out_file_header, sizeof(BITMAPFILEHEADER), 1, outFile);
     fwrite(&out_info_header, sizeof(BITMAPINFOHEADER), 1, outFile);
     
@@ -925,9 +925,9 @@ void svd_compress(const char* input_file, const char* svd_file, const char* outp
         for (int x = 0; x < width; x++) {
             int idx = y * width + x;
             unsigned char pixel[3];
-            pixel[0] = out_img[idx * 3 + 2]; // B
-            pixel[1] = out_img[idx * 3 + 1]; // G
-            pixel[2] = out_img[idx * 3];     // R
+            pixel[0] = out_img[idx * 3 + 2];
+            pixel[1] = out_img[idx * 3 + 1];
+            pixel[2] = out_img[idx * 3];
             fwrite(pixel, 3, 1, outFile);
         }
         if (padding > 0) {
@@ -935,13 +935,23 @@ void svd_compress(const char* input_file, const char* svd_file, const char* outp
         }
     }
     
-    // освобождаем память
+ 
     fclose(outFile);
-    free(A_R); free(A_G); free(A_B);
-    free(U_R_load); free(S_R_load); free(V_R_load);
-    free(U_G_load); free(S_G_load); free(V_G_load);
-    free(U_B_load); free(S_B_load); free(V_B_load);
-    free(A_R_approx); free(A_G_approx); free(A_B_approx);
+    free(A_R);
+    free(A_G);
+    free(A_B);
+    free(U_R_load);
+    free(S_R_load);
+    free(V_R_load);
+    free(U_G_load);
+    free(S_G_load);
+    free(V_G_load);
+    free(U_B_load);
+    free(S_B_load);
+    free(V_B_load);
+    free(A_R_approx);
+    free(A_G_approx);
+    free(A_B_approx);
     free(out_img);
     free(img_data);
 }
