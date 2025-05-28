@@ -9,18 +9,20 @@
 2. Указать в файле имя изображения в формате bmp, которое хотите сжать
 3. В командной строке прописать следующее:
 
-   cd **Вставить путь к файлу с кодом**
-   gcc svd_jpeg_comparison.c -o svd_jpeg_comparison
-   ./svd_jpeg_comparison
+cd *Вставить путь к файлу с кодом*
+gcc svd_jpeg_comparison.c -o svd_jpeg_comparison
+svd_jpeg.exe (или ./svd_jpeg.exe через запуск PowerShell)
 
    Для этого должен быть установлен компилятор gcc
 
 # Пример использования
 Входное изображение example.bmp. В результате получаются 4 изображения:
-  svd_low.bmp
-  svd_high.bmp
-  dct_low.bmp
-  dct_high.bmp
+svd_low.bmp
+svd_high.bmp
+dct_low.bmp
+dct_high.bmp
+В терминал выводятся статусы сжатия, а также результат расчета метрик:
+
 
   
    
