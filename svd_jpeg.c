@@ -1,8 +1,8 @@
 /*
-    программа для сжатия изображений методами SVD и DCT
+    программа для сжатия изображений методами SVD и JPEG
     реализованы два метода сжатия:
     1. SVD - сингулярное разложение для каждого цветового канала
-    2. DCT - дискретное косинусное преобразование (основные этапы JPEG)
+    2. JPEG - дискретное косинусное преобразование (основные этапы JPEG)
 */
 // программа работает без использования сторонних библиотек
 #include <stdio.h>
@@ -15,7 +15,7 @@ const char* INPUT_FILE = "example.bmp"; // имя входного файла в
 const int channels = 3; // количество каналов в изображении
 const double PI = 3.14159265358979323846; // число пи
 
-void dct_compress(const char* input_file, const char* dct_file, const char* output_file, double quality);
+void jpeg_compress(const char* input_file, const char* jpeg_file, const char* output_file, double quality);
 void svd_compress(const char* input_file, const char* svd_file, const char* output_file, int k);
 void calculate_metrics(const char* original_file, const char* compressed_file);
 
@@ -480,9 +480,9 @@ int main() {
     svd_compress(INPUT_FILE, "svd_low.bin", "svd_low.bmp", 50);    // 50 компонент
     
     // сжатие jpeg
-    printf("\nPerforming DCT compression...\n");
-    dct_compress(INPUT_FILE, "dct_high.bin", "jpg_high.bmp", 0.9); // 90%
-    dct_compress(INPUT_FILE, "dct_low.bin", "jpg_low.bmp", 0.3);   // 30%
+    printf("\nPerforming JPEG compression...\n");
+    jpeg_compress(INPUT_FILE, "jpeg_high.bin", "jpg_high.bmp", 0.9); // 90%
+    jpeg_compress(INPUT_FILE, "jpeg_low.bin", "jpg_low.bmp", 0.3);   // 30%
     
     // метрики качества
     printf("\nCalculating quality metrics...\n");
@@ -490,14 +490,14 @@ int main() {
     calculate_metrics(INPUT_FILE, "svd_high.bmp"); // метрики для SVD высокого качества
     calculate_metrics(INPUT_FILE, "svd_low.bmp");  // метрики для SVD низкого качества
     
-    printf("\nDCT compression metrics:\n");
-    calculate_metrics(INPUT_FILE, "jpg_high.bmp"); // метрики для DCT высокого качества
-    calculate_metrics(INPUT_FILE, "jpg_low.bmp");  // метрики для DCT низкого качества
+    printf("\nJPEG compression metrics:\n");
+    calculate_metrics(INPUT_FILE, "jpg_high.bmp"); // метрики для JPEG высокого качества
+    calculate_metrics(INPUT_FILE, "jpg_low.bmp");  // метрики для JPEG низкого качества
     
     return 0;
 }
 
-void dct_compress(const char* input_file, const char* dct_file, const char* output_file, double quality) { // сжатие изображения методом DCT
+void jpeg_compress(const char* input_file, const char* jpeg_file, const char* output_file, double quality) { // сжатие изображения методом JPEG
     // открываем входной файл
     FILE* file = fopen(input_file, "rb");
     if (!file) {
@@ -564,7 +564,7 @@ void dct_compress(const char* input_file, const char* dct_file, const char* outp
     }
     
     // открываем файл для сжатых данных
-    FILE *compressed = fopen(dct_file, "wb");
+    FILE *compressed = fopen(jpeg_file, "wb");
     if (!compressed) {
         printf("Error opening compressed file!\n");
         return;
@@ -625,7 +625,7 @@ void dct_compress(const char* input_file, const char* dct_file, const char* outp
     fclose(compressed);
     
     // декомпрессия
-    compressed = fopen(dct_file, "rb");
+    compressed = fopen(jpeg_file, "rb");
     if (!compressed) {
         printf("Error opening compressed file!\n");
         return;
