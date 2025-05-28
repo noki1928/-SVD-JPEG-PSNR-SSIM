@@ -10,7 +10,7 @@
 3. В командной строке прописать следующее:
 
 1) cd *Вставить путь к файлу с кодом*
-2) gcc svd_jpeg_comparison.c -o svd_jpeg_comparison
+2) gcc svd_jpeg.c -o svd_jpeg
 3) svd_jpeg.exe (или ./svd_jpeg.exe через запуск PowerShell)
 
    Для этого должен быть установлен компилятор gcc
@@ -21,19 +21,33 @@
 2. svd_high.bmp
 3. dct_low.bmp
 4. dct_high.bmp
+   
 В терминал выводятся статусы сжатия, а также результат расчета метрик:
+
 SVD compression metrics:
+
 Metrics for svd_high.bmp:
+
 PSNR: 26.90 dB
+
 SSIM: 0.7443
+
 Metrics for svd_low.bmp:
+
 PSNR: 24.00 dB
+
 SSIM: 0.6499
+
 DCT compression metrics:
+
 Metrics for jpg_high.bmp:
+
 PSNR: 26.70 dB
+
 SSIM: 0.8163
+
 Metrics for jpg_low.bmp:
+
 PSNR: 24.14 dB
 SSIM: 0.6953
 
