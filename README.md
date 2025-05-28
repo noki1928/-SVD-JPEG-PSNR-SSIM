@@ -51,6 +51,7 @@ SSIM: 0.8163
 Metrics for jpg_low.bmp:
 
 PSNR: 24.14 dB
+
 SSIM: 0.6953
 
 
